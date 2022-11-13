@@ -29,7 +29,7 @@ const game = useGameStore()
       <ProgressBar :value="game.fatigue / 100" color="purple" />
     </div>
     <div v-if="game.pendingOutcome" class="outcome">
-      {{ game.pendingOutcome.description }}
+      <span>{{ game.pendingOutcome.description }}</span>
       <button @click="game.acceptOutcome">Ok</button>
     </div>
     <div v-else-if="game.currentLocation.actions.length" class="actions">
@@ -76,14 +76,21 @@ const game = useGameStore()
   grid-area: actions;
   font-size: 2em;
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
   gap: 0.5em;
 
   border: 1px solid rgb(170, 170, 170);
   padding: 0.5em;
   border-radius: 0.2em;
   background-color: rgba(0, 0, 0, 0.75);
+}
+
+.outcome {
+  flex-direction: column;
+}
+
+.actions {
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .settings {

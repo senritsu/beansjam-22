@@ -8,8 +8,8 @@ import dreams, { type Dream } from '@/dreams'
 
 export type Screen = 'title' | 'game' | 'death' | 'insanity' | 'victory'
 
-const energyRecoveryRate = 4
-const defaultFatigueBuildup = 6
+const energyRecoveryRate = 5
+const defaultFatigueBuildup = 5
 const defaultDreamCooldown = 2
 const defaultDreamDuration = 5
 
