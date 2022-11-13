@@ -48,12 +48,32 @@ const actions: { [name: string]: Action } = {
         weight: 1,
         health: -20,
         fatigue: -10,
-        description: 'You burned yourself on the fire',
+        description: 'You burned yourself on the fire.',
       },
       {
         weight: 5,
         fatigue: -10,
-        description: 'Tending to the fire keeps you awake',
+        description: 'Tending to the fire keeps you busy.',
+      },
+      {
+        weight: 2,
+        fatigue: -20,
+        sanity: -5,
+        description: 'Some noise startles you. You hope it was just an animal.',
+      },
+      {
+        weight: 1,
+        fatigue: -10,
+        sanity: -5,
+        description:
+          'Some of the embers seem to form patterns, resembling your visions of the monolith.',
+      },
+      {
+        weight: 3,
+        stamina: +10,
+        fatigue: -15,
+        health: +5,
+        description: 'The warmth of the fire soothers your aching muscles.',
       },
       {
         weight: 1,
@@ -61,6 +81,13 @@ const actions: { [name: string]: Action } = {
         sanity: -5,
         description:
           'The flames seem familiar. They remind you of your dreams.',
+      },
+      {
+        weight: 1,
+        fatigue: -30,
+        sanity: -5,
+        description:
+          'A murder of crows shrieks while they circle above you, jolting you wide-awake.',
       },
     ],
   },
@@ -76,11 +103,25 @@ const actions: { [name: string]: Action } = {
   },
   eatRations: {
     id: 'rations',
+    name: 'Start eating your rations',
+    outcomes: [
+      {
+        description:
+          'Not particularly tasty, but nourishing. You leave some for later.',
+        health: +10,
+        stamina: +75,
+        fatigue: +10,
+      },
+    ],
+  },
+  eatRations2: {
+    id: 'rations2',
+    prerequisites: ['rations'],
     name: 'Eat your rations',
     outcomes: [
       {
         description:
-          'Not particularly tasty, but nourishing. Unfortunately you have nothing left.',
+          'You devour the rest of your rations. Unfortunately now there is nothing left.',
         health: +10,
         stamina: +75,
         fatigue: +10,
@@ -213,6 +254,21 @@ const actions: { [name: string]: Action } = {
       },
     ],
   },
+  rememberCrater: {
+    id: 'rememberCrater',
+    name: 'Think about the crater',
+    prerequisites: ['crater'],
+    outcomes: [
+      {
+        description:
+          'The fire of the crater still seems to burn in your mind. You almost feel warmer in this fog.',
+        sanity: -5,
+        health: +5,
+        stamina: +20,
+        fatigue: -10,
+      },
+    ],
+  },
 }
 
 const locations: Location[] = [
@@ -262,7 +318,12 @@ const locations: Location[] = [
     pos: { x: 57, y: 45 },
     image: forest2,
     connectedTo: ['ridge', 'forest2'],
-    actions: [actions.tendTheFire, actions.eatRations, actions.huntForFood],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.eatRations2,
+      actions.huntForFood,
+    ],
   },
   {
     id: 'ridge',
@@ -270,7 +331,12 @@ const locations: Location[] = [
     pos: { x: 48, y: 35 },
     image: ridge2,
     connectedTo: ['stormyRidge'],
-    actions: [actions.tendTheFire, actions.eatRations, actions.lookDown],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.eatRations2,
+      actions.lookDown,
+    ],
   },
   {
     id: 'stormyRidge',
@@ -278,7 +344,12 @@ const locations: Location[] = [
     pos: { x: 55, y: 23 },
     image: blizzard,
     connectedTo: ['peak'],
-    actions: [actions.tendTheFire, actions.eatRations, actions.lookDown],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.eatRations2,
+      actions.rememberCrater,
+    ],
   },
   {
     id: 'forest2',
@@ -286,7 +357,12 @@ const locations: Location[] = [
     pos: { x: 66, y: 40 },
     image: forest3,
     connectedTo: ['cave'],
-    actions: [actions.tendTheFire, actions.eatRations, actions.huntForFood],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.eatRations2,
+      actions.huntForFood,
+    ],
   },
   {
     id: 'cave',
@@ -294,7 +370,12 @@ const locations: Location[] = [
     pos: { x: 68, y: 32 },
     image: cave2,
     connectedTo: ['peak'],
-    actions: [actions.tendTheFire, actions.eatRations, actions.searchCave],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.eatRations2,
+      actions.searchCave,
+    ],
   },
   {
     id: 'peak',
