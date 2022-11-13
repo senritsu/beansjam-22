@@ -81,8 +81,8 @@ const actions: { [name: string]: Action } = {
       {
         description:
           'Not particularly tasty, but nourishing. Unfortunately you have nothing left.',
-        health: +5,
-        stamina: +20,
+        health: +10,
+        stamina: +75,
         fatigue: +10,
       },
     ],
@@ -270,7 +270,7 @@ const locations: Location[] = [
     pos: { x: 48, y: 35 },
     image: ridge2,
     connectedTo: ['stormyRidge'],
-    actions: [actions.tendTheFire, actions.eatRations],
+    actions: [actions.tendTheFire, actions.eatRations, actions.lookDown],
   },
   {
     id: 'stormyRidge',
