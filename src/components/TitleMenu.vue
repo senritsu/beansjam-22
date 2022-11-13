@@ -7,7 +7,8 @@ const game = useGameStore()
 <template>
   <main class="title" v-if="game.screen === 'title'">
     <div class="logo">
-      <h1>Arctic Prototype</h1>
+      <h1>Polar Eclipse</h1>
+      <h3>prototype</h3>
       <button @click="game.startGame">Start Game</button>
     </div>
   </main>
@@ -30,6 +31,7 @@ const game = useGameStore()
 }
 
 button {
+  margin-top: 1em;
   font-size: 3em;
   background-color: #333;
   transition: background-color 0.3s;

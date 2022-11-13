@@ -30,6 +30,8 @@ watch(escape, (pressed) => {
   display: grid;
   grid-template: 'main' 1fr / 1fr;
   overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 .bonfire,

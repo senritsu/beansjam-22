@@ -11,10 +11,12 @@ const game = useGameStore()
 
 const paths = computed(() =>
   locations
-    .filter((location) => game.visibleLocations.has(location.id) || debug)
+    .filter(
+      (location) => game.visibleLocations.has(location.id) || showEverything
+    )
     .reduce((array, from) => {
       for (const toId of from.connectedTo.filter(
-        (id) => game.visibleLocations.has(id) || debug
+        (id) => game.visibleLocations.has(id) || showEverything
       )) {
         const to = locations.find((x) => x.id === toId)
 
@@ -27,7 +29,7 @@ const paths = computed(() =>
     }, [] as [Location, Location][])
 )
 
-const debug = true
+const showEverything = false
 </script>
 
 <template>
@@ -46,7 +48,8 @@ const debug = true
         />
         <MapMarker
           v-for="location in locations.filter(
-            (location) => game.visibleLocations.has(location.id) || debug
+            (location) =>
+              game.visibleLocations.has(location.id) || showEverything
           )"
           :key="location.id"
           :pos="location.pos"

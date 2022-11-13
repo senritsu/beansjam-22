@@ -62,7 +62,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   const canTravel = computed(
-    () => currentLocation.value.connectedTo.length && energy.value >= 100
+    () => currentLocation.value.connectedTo.length > 0 && energy.value >= 100
   )
 
   return {
