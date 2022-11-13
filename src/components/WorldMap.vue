@@ -90,10 +90,10 @@ const showEverything = false
     transform: translateX(0);
   }
   10% {
-    transform: translateX(5px);
+    transform: translateX(10px);
   }
   2% {
-    transform: translateX(-5px);
+    transform: translateX(-10px);
   }
   30% {
     transform: translateX(0);

@@ -109,7 +109,7 @@ const actions: { [name: string]: Action } = {
     name: 'Hunt for food',
     outcomes: [
       {
-        weight: 3,
+        weight: 5,
         description:
           'You managed to catch a small animal. You manage to roast it over the fire, which also provides some distraction from your dreams.',
         stamina: +40,
@@ -130,6 +130,12 @@ const actions: { [name: string]: Action } = {
         health: -50,
         sanity: -10,
         fatigue: +20,
+      },
+      {
+        weight: 1,
+        description:
+          'You find some supplies from an old expedition, including some bandages.',
+        health: +30,
       },
     ],
   },
@@ -155,6 +161,31 @@ const actions: { [name: string]: Action } = {
           'You remember some of those passages from your dreams. You must be on the right path.',
         sanity: +5,
         fatigue: -10,
+      },
+    ],
+  },
+  lookDown: {
+    id: 'lookDown',
+    name: 'Look down',
+    outcomes: [
+      {
+        weight: 3,
+        description:
+          'Vertigo overtakes you, you almost stumble down the cliff. You hurry back to your fire.',
+        sanity: -10,
+        fatigue: -10,
+      },
+      {
+        weight: 6,
+        description:
+          'Seeing how far you have come elates you. Your purpose is renewed.',
+        sanity: +10,
+        fatigue: -20,
+      },
+      {
+        weight: 1,
+        description: 'You stumble and fall, hitting your head on the rocks.',
+        health: -60,
       },
     ],
   },
@@ -223,7 +254,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 23 },
     image: blizzard,
     connectedTo: ['peak'],
-    actions: [actions.tendTheFire, actions.eatRations],
+    actions: [actions.tendTheFire, actions.eatRations, actions.lookDown],
   },
   {
     id: 'forest2',

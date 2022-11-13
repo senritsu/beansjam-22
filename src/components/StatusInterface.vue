@@ -79,6 +79,11 @@ const game = useGameStore()
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5em;
+
+  border: 1px solid rgb(170, 170, 170);
+  padding: 0.5em;
+  border-radius: 0.2em;
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 .settings {
