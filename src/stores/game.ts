@@ -122,7 +122,12 @@ export const useGameStore = defineStore('game', () => {
 
     screen.value = 'game'
 
-    paused = false
+    pendingOutcome.value = {
+      description:
+        'Your dreams have lead you here. The artifact seems to draw you to the top of that mountain. Maybe there you will find peace.',
+    }
+
+    paused = true
   }
 
   const reset = () => {
