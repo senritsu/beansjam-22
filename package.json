@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "push": "butler push dist senritsu/polar-eclipse:prototype"
+    "push": "butler push dist senritsu/polar-eclipse:html"
   },
   "dependencies": {
     "@vueuse/core": "^9.5.0",
