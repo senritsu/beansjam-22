@@ -3,6 +3,7 @@ import type { Location } from '@/locations'
 import { useGameStore } from '@/stores/game'
 import LocationName from './LocationName.vue'
 import ProgressBar from './ProgressBar.vue'
+import DreamFlash from './DreamFlash.vue'
 
 defineProps<{ location: Location }>()
 
@@ -28,7 +29,7 @@ const game = useGameStore()
     </div>
     <div v-else-if="game.currentLocation.actions.length" class="actions">
       <button
-        v-for="action in game.currentLocation.actions"
+        v-for="action in game.availableActions"
         :key="action.name"
         @click="game.chooseAction(action)"
       >
@@ -38,6 +39,11 @@ const game = useGameStore()
     <div class="settings">
       <button @click="game.returnToTitle">Quit</button>
     </div>
+    <DreamFlash
+      class="dream"
+      v-if="game.activeDream"
+      :image="game.activeDream.image"
+    />
   </div>
 </template>
 
@@ -45,7 +51,7 @@ const game = useGameStore()
 .ui {
   display: grid;
   grid-template:
-    'stats location unused' auto
+    'stats location settings' auto
     'mid mid unused' 1fr
     'actions actions unused' auto / 1fr 2fr 1fr;
   gap: 0.5em;
@@ -76,6 +82,7 @@ const game = useGameStore()
 }
 
 .settings {
+  grid-area: settings;
   font-size: 2em;
   justify-self: end;
 }
@@ -90,5 +97,10 @@ const game = useGameStore()
   color: var(--color-text);
   font-size: 1em;
   cursor: pointer;
+}
+
+.dream {
+  grid-area: 1 / 1 / 4 / 4;
+  pointer-events: none;
 }
 </style>

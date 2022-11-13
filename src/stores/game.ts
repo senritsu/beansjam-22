@@ -4,12 +4,14 @@ import { useRafFn } from '@vueuse/core'
 
 import type { Action, Outcome } from '@/locations'
 import locations from '@/locations'
+import dreams, { type Dream } from '@/dreams'
 
 export type Screen = 'title' | 'game' | 'death' | 'insanity' | 'victory'
 
-const energyRecoveryRate = 5
-const defaultFatigueBuildup = 10
+const energyRecoveryRate = 4
+const defaultFatigueBuildup = 6
 const defaultDreamCooldown = 1
+const defaultDreamDuration = 3
 
 const weightedRandomChoice = <T extends { weight?: number }>(array: T[]) => {
   const weighted = array.reduce((all, item) => {
@@ -19,6 +21,8 @@ const weightedRandomChoice = <T extends { weight?: number }>(array: T[]) => {
 
   return weighted[Math.floor(Math.random() * weighted.length)]
 }
+
+const clamp = (value: number) => Math.min(100, Math.max(0, value))
 
 export const useGameStore = defineStore('game', () => {
   const screen = ref<Screen>('title')
@@ -32,6 +36,7 @@ export const useGameStore = defineStore('game', () => {
 
   const currentLocationId = ref('start')
   const visitedLocations = ref(new Set<string>(['start']))
+  const completedActions = ref(new Set<string>())
 
   const currentLocation = computed(() => {
     const location = locations.find((x) => x.id === currentLocationId.value)
@@ -43,7 +48,10 @@ export const useGameStore = defineStore('game', () => {
 
   let paused = true
   let lastFrame = performance.now() / 100
+
+  const activeDream = ref<Dream>()
   let dreamCheckCooldown = 0
+
   const { pause, resume } = useRafFn(() => {
     if (paused) return
 
@@ -59,11 +67,20 @@ export const useGameStore = defineStore('game', () => {
       screen.value = 'death'
     }
 
+    if (activeDream.value && dreamCheckCooldown <= 0) {
+      console.log('dream finished')
+      activeDream.value = undefined
+    }
+
     // check to show dreams
-    if (fatigue.value >= 70 && dreamCheckCooldown <= 0) {
+    if (!activeDream.value && fatigue.value >= 70 && dreamCheckCooldown <= 0) {
+      console.log('dream check')
       dreamCheckCooldown = defaultDreamCooldown
       if (Math.random() <= 0.3) {
-        // TODO show dream flashes
+        console.log('DREAM!')
+        activeDream.value = weightedRandomChoice(dreams)
+        dreamCheckCooldown = defaultDreamDuration
+        sanity.value = clamp(sanity.value + activeDream.value.sanity)
       }
     }
 
@@ -73,8 +90,26 @@ export const useGameStore = defineStore('game', () => {
   })
 
   const pendingOutcome = ref<Outcome | undefined>()
+
+  const availableActions = computed(() => {
+    return currentLocation.value.actions.filter((action) => {
+      console.log({ action })
+      const stillAvailable =
+        !action.id || !completedActions.value.has(action.id)
+      const prerequisitesMet =
+        !action.prerequisites?.length ||
+        action.prerequisites.every((id) => completedActions.value.has(id))
+
+      return stillAvailable && prerequisitesMet
+    })
+  })
+
   const chooseAction = (action: Action) => {
     paused = true
+
+    if (action.id) {
+      completedActions.value.add(action.id)
+    }
 
     const outcome = weightedRandomChoice(action.outcomes)
 
@@ -86,10 +121,10 @@ export const useGameStore = defineStore('game', () => {
 
     const outcome = pendingOutcome.value
 
-    health.value += outcome.health ?? 0
-    sanity.value += outcome.sanity ?? 0
-    stamina.value += outcome.stamina ?? 0
-    fatigue.value += outcome.fatigue ?? 0
+    health.value = clamp(health.value + (outcome.health ?? 0))
+    sanity.value = clamp(sanity.value + (outcome.sanity ?? 0))
+    stamina.value = clamp(stamina.value + (outcome.stamina ?? 0))
+    fatigue.value = clamp(fatigue.value + (outcome.fatigue ?? 0))
 
     if (outcome.victory) {
       screen.value = 'victory'
@@ -109,6 +144,7 @@ export const useGameStore = defineStore('game', () => {
     currentLocationId.value = id
     visitedLocations.value.add(id)
     stamina.value = 0
+    fatigue.value = clamp(fatigue.value - 70)
   }
 
   const visibleLocations = computed(() => {
@@ -135,6 +171,14 @@ export const useGameStore = defineStore('game', () => {
     sanity.value = 80
     stamina.value = 50
     fatigue.value = 20
+
+    activeDream.value = undefined
+    pendingOutcome.value = undefined
+    dreamCheckCooldown = 0
+    visitedLocations.value.clear()
+    completedActions.value.clear()
+    currentLocationId.value = 'start'
+    visitedLocations.value.add('start')
 
     paused = true
   }
@@ -166,9 +210,12 @@ export const useGameStore = defineStore('game', () => {
     currentLocation,
     canTravel,
     moveTo,
+    completedActions,
+    availableActions,
     chooseAction,
     pendingOutcome,
     acceptOutcome,
     items,
+    activeDream,
   }
 })

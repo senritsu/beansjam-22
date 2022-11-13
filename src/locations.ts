@@ -24,6 +24,9 @@ export type Location = {
   actions: Action[]
 }
 export type Action = {
+  id?: string
+  prerequisites?: string[]
+  requirements?: string[]
   name: string
   outcomes: Outcome[]
 }
@@ -43,14 +46,21 @@ const actions: { [name: string]: Action } = {
     outcomes: [
       {
         weight: 1,
-        health: -10,
-        fatigue: -20,
+        health: -20,
+        fatigue: -10,
         description: 'You burned yourself on the fire',
       },
       {
         weight: 5,
-        fatigue: -5,
+        fatigue: -10,
         description: 'Tending to the fire keeps you awake',
+      },
+      {
+        weight: 1,
+        fatigue: -20,
+        sanity: -5,
+        description:
+          'The flames seem familiar. They remind you of your dreams.',
       },
     ],
   },
@@ -64,6 +74,90 @@ const actions: { [name: string]: Action } = {
       },
     ],
   },
+  eatRations: {
+    id: 'rations',
+    name: 'Eat your rations',
+    outcomes: [
+      {
+        description:
+          'Not particularly tasty, but nourishing. Unfortunately you have nothing left.',
+        health: +5,
+        stamina: +20,
+        fatigue: +10,
+      },
+    ],
+  },
+  investigateCrater: {
+    id: 'crater',
+    name: 'Investigate the crater',
+    outcomes: [
+      {
+        description:
+          'You find a shard of some crystal resembling your visions of the monolith. Your resolve is strengthening.',
+        sanity: +5,
+        stamina: +10,
+        fatigue: -30,
+      },
+      {
+        description:
+          'The crater is perpetually burning, you have never seen anything like it. It is quite unsettling.',
+        sanity: -10,
+      },
+    ],
+  },
+  huntForFood: {
+    name: 'Hunt for food',
+    outcomes: [
+      {
+        weight: 3,
+        description:
+          'You managed to catch a small animal. You manage to roast it over the fire, which also provides some distraction from your dreams.',
+        stamina: +40,
+        health: +5,
+        fatigue: -20,
+      },
+      {
+        weight: 2,
+        description:
+          'You stumble down a small ravine, almost breaking your leg.',
+        health: -20,
+        fatigue: +30,
+      },
+      {
+        weight: 1,
+        description:
+          'A wild bear attacks you, injuring you gravely. You barely manage to escape with your life.',
+        health: -50,
+        sanity: -10,
+        fatigue: +20,
+      },
+    ],
+  },
+  searchCave: {
+    name: 'Search the cave',
+    outcomes: [
+      {
+        weight: 1,
+        description:
+          'Some patterns in these caves are almost hypnotizing. You have to tear yourself from them.',
+        sanity: -5,
+      },
+      {
+        weight: 3,
+        description:
+          'You manage to forage some mushrooms and pray they are not poisonous.',
+        stamina: +20,
+        health: +5,
+      },
+      {
+        weight: 1,
+        description:
+          'You remember some of those passages from your dreams. You must be on the right path.',
+        sanity: +5,
+        fatigue: -10,
+      },
+    ],
+  },
 }
 
 const locations: Location[] = [
@@ -73,7 +167,7 @@ const locations: Location[] = [
     pos: { x: 25, y: 85 },
     image: coast,
     connectedTo: ['forest'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations],
   },
   {
     id: 'forest',
@@ -81,7 +175,7 @@ const locations: Location[] = [
     pos: { x: 35, y: 75 },
     image: forest,
     connectedTo: ['corridor', 'crater'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations, actions.huntForFood],
   },
   {
     id: 'crater',
@@ -89,7 +183,7 @@ const locations: Location[] = [
     pos: { x: 52, y: 72 },
     image: crater,
     connectedTo: ['corridor'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.investigateCrater],
   },
   {
     id: 'corridor',
@@ -97,7 +191,7 @@ const locations: Location[] = [
     pos: { x: 45, y: 62 },
     image: cave,
     connectedTo: ['foothills'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations, actions.searchCave],
   },
   {
     id: 'foothills',
@@ -105,7 +199,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 50 },
     image: foothills,
     connectedTo: ['clearing'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations],
   },
   {
     id: 'clearing',
@@ -113,7 +207,7 @@ const locations: Location[] = [
     pos: { x: 57, y: 45 },
     image: forest2,
     connectedTo: ['ridge', 'forest2'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations, actions.huntForFood],
   },
   {
     id: 'ridge',
@@ -121,7 +215,7 @@ const locations: Location[] = [
     pos: { x: 48, y: 35 },
     image: ridge2,
     connectedTo: ['stormyRidge'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations],
   },
   {
     id: 'stormyRidge',
@@ -129,7 +223,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 23 },
     image: blizzard,
     connectedTo: ['peak'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations],
   },
   {
     id: 'forest2',
@@ -137,7 +231,7 @@ const locations: Location[] = [
     pos: { x: 66, y: 40 },
     image: forest3,
     connectedTo: ['cave'],
-    actions: [actions.tendTheFire],
+    actions: [actions.tendTheFire, actions.eatRations, actions.huntForFood],
   },
   {
     id: 'cave',
@@ -145,7 +239,11 @@ const locations: Location[] = [
     pos: { x: 68, y: 32 },
     image: cave2,
     connectedTo: ['peak'],
-    actions: [actions.tendTheFire],
+    actions: [
+      actions.tendTheFire,
+      actions.eatRations,
+      actions.collectMushrooms,
+    ],
   },
   {
     id: 'peak',

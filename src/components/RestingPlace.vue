@@ -16,9 +16,7 @@ const opacity = computed(() => lerp(1, 0.1, game.fatigue / 100))
         backgroundImage: `url(${game.currentLocation.image})`,
         opacity,
       }"
-    >
-      {{ opacity }}
-    </div>
+    ></div>
   </div>
 </template>
 
