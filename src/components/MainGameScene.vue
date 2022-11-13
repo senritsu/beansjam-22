@@ -19,7 +19,7 @@ watch(escape, (pressed) => {
 
 <template>
   <div class="scene">
-    <RestingPlace class="bonfire" :location="game.currentLocation" />
+    <RestingPlace class="bonfire" />
     <StatusInterface class="ui" :location="game.currentLocation" />
     <WorldMap class="map"></WorldMap>
   </div>

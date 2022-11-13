@@ -21,6 +21,49 @@ export type Location = {
   pos: Coord
   image: string
   connectedTo: string[]
+  actions: Action[]
+}
+export type Action = {
+  name: string
+  outcomes: Outcome[]
+}
+export type Outcome = {
+  description: string
+  weight?: number
+  health?: number
+  sanity?: number
+  stamina?: number
+  fatigue?: number
+  victory?: boolean
+}
+
+const actions: { [name: string]: Action } = {
+  tendTheFire: {
+    name: 'Tend the fire',
+    outcomes: [
+      {
+        weight: 1,
+        health: -10,
+        fatigue: -20,
+        description: 'You burned yourself on the fire',
+      },
+      {
+        weight: 5,
+        fatigue: -5,
+        description: 'Tending to the fire keeps you awake',
+      },
+    ],
+  },
+  offerArtifact: {
+    name: 'Offer the artifact',
+    outcomes: [
+      {
+        description:
+          'You hold up the artifact to the monolith. It shatters instantly, and dark clouds start gathering. You feel like a giant weight is lifted from you, even if you are not sure what you have unleashed.',
+        victory: true,
+      },
+    ],
+  },
 }
 
 const locations: Location[] = [
@@ -30,6 +73,7 @@ const locations: Location[] = [
     pos: { x: 25, y: 85 },
     image: coast,
     connectedTo: ['forest'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'forest',
@@ -37,6 +81,7 @@ const locations: Location[] = [
     pos: { x: 35, y: 75 },
     image: forest,
     connectedTo: ['corridor', 'crater'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'crater',
@@ -44,6 +89,7 @@ const locations: Location[] = [
     pos: { x: 52, y: 72 },
     image: crater,
     connectedTo: ['corridor'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'corridor',
@@ -51,6 +97,7 @@ const locations: Location[] = [
     pos: { x: 45, y: 62 },
     image: cave,
     connectedTo: ['foothills'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'foothills',
@@ -58,6 +105,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 50 },
     image: foothills,
     connectedTo: ['clearing'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'clearing',
@@ -65,6 +113,7 @@ const locations: Location[] = [
     pos: { x: 57, y: 45 },
     image: forest2,
     connectedTo: ['ridge', 'forest2'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'ridge',
@@ -72,6 +121,7 @@ const locations: Location[] = [
     pos: { x: 48, y: 35 },
     image: ridge2,
     connectedTo: ['stormyRidge'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'stormyRidge',
@@ -79,6 +129,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 23 },
     image: blizzard,
     connectedTo: ['peak'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'forest2',
@@ -86,6 +137,7 @@ const locations: Location[] = [
     pos: { x: 66, y: 40 },
     image: forest3,
     connectedTo: ['cave'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'cave',
@@ -93,6 +145,7 @@ const locations: Location[] = [
     pos: { x: 68, y: 32 },
     image: cave2,
     connectedTo: ['peak'],
+    actions: [actions.tendTheFire],
   },
   {
     id: 'peak',
@@ -100,6 +153,7 @@ const locations: Location[] = [
     pos: { x: 53, y: 8 },
     image: monolith,
     connectedTo: [],
+    actions: [actions.offerArtifact],
   },
 ]
 

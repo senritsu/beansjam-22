@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import type { Location } from '@/locations'
-defineProps<{
-  location: Location
-}>()
+import { computed, watchEffect } from 'vue'
+import { useGameStore } from '../stores/game'
+
+const game = useGameStore()
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+const opacity = computed(() => lerp(1, 0.1, game.fatigue / 100))
 </script>
 
 <template>
   <div class="place">
     <div
       class="image"
-      :style="{ backgroundImage: `url(${location.image})` }"
-    ></div>
+      :style="{
+        backgroundImage: `url(${game.currentLocation.image})`,
+        opacity,
+      }"
+    >
+      {{ opacity }}
+    </div>
   </div>
 </template>
 
