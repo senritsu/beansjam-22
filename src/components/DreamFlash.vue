@@ -17,7 +17,7 @@ defineProps<{
 }
 
 .image {
-  animation: flicker 3s infinite;
+  animation: flicker 5s infinite;
   background-size: contain;
   width: 512px;
   height: 512px;

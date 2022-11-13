@@ -10,8 +10,8 @@ export type Screen = 'title' | 'game' | 'death' | 'insanity' | 'victory'
 
 const energyRecoveryRate = 4
 const defaultFatigueBuildup = 6
-const defaultDreamCooldown = 1
-const defaultDreamDuration = 3
+const defaultDreamCooldown = 2
+const defaultDreamDuration = 5
 
 const weightedRandomChoice = <T extends { weight?: number }>(array: T[]) => {
   const weighted = array.reduce((all, item) => {

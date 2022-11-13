@@ -12,6 +12,11 @@ const game = useGameStore()
 
 <template>
   <div class="ui">
+    <DreamFlash
+      class="dream"
+      v-if="game.activeDream"
+      :image="game.activeDream.image"
+    />
     <LocationName class="name" :name="location.name" />
     <div class="stats">
       <label>Health</label>
@@ -39,11 +44,6 @@ const game = useGameStore()
     <div class="settings">
       <button @click="game.returnToTitle">Quit</button>
     </div>
-    <DreamFlash
-      class="dream"
-      v-if="game.activeDream"
-      :image="game.activeDream.image"
-    />
   </div>
 </template>
 
