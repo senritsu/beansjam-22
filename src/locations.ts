@@ -189,6 +189,30 @@ const actions: { [name: string]: Action } = {
       },
     ],
   },
+  studyAscent: {
+    id: 'studyAscent',
+    name: 'Plan your ascent',
+    outcomes: [
+      {
+        description: 'The climb seems insurmountable. Your spirit wavers.',
+        fatigue: +10,
+        sanity: -10,
+      },
+      {
+        description:
+          'You think you can make out a viable path, it looks like someone left some markings.',
+        fatigue: -10,
+        sanity: +10,
+      },
+      {
+        description:
+          'The vision of the monolith burns in your memory, drawing you towards it.',
+        fatigue: -30,
+        stamina: +30,
+        sanity: -10,
+      },
+    ],
+  },
 }
 
 const locations: Location[] = [
@@ -230,7 +254,7 @@ const locations: Location[] = [
     pos: { x: 55, y: 50 },
     image: foothills,
     connectedTo: ['clearing'],
-    actions: [actions.tendTheFire, actions.eatRations],
+    actions: [actions.tendTheFire, actions.eatRations, actions.studyAscent],
   },
   {
     id: 'clearing',
@@ -270,11 +294,7 @@ const locations: Location[] = [
     pos: { x: 68, y: 32 },
     image: cave2,
     connectedTo: ['peak'],
-    actions: [
-      actions.tendTheFire,
-      actions.eatRations,
-      actions.collectMushrooms,
-    ],
+    actions: [actions.tendTheFire, actions.eatRations, actions.searchCave],
   },
   {
     id: 'peak',
